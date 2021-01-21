@@ -1,0 +1,201 @@
+import numpy as np
+import pandas as pd
+import os
+import glob
+import math
+import matplotlib.pyplot as plt
+import seaborn as sbn
+
+
+
+gp=pd.read_csv(r"C:\Users\harid\OneDrive\Desktop\python\data\datasets from kaggle\googleplaystore.csv")
+
+sbn.relplot(x="Rating",y="Installs",data=gp)
+
+gp.columns
+
+gp.shape
+
+sbn.relplot(x="Type",y="Installs",data=gp)
+
+gp["App"].value_counts
+
+gp.isnull().sum()
+
+# list (mutable arrays)
+# tuple (immutable arrays)
+# dictionary (hashtable)
+# sets and frozen sets
+
+# series: a one dimensional lablled array capable of holding any data type
+
+
+a=pd.Series([3,-5,7,4],index=["a","b","c","d"])
+
+a
+
+df=pd.DataFrame(a)  
+# dataframe : a 2d labelled data structure with columns of potentially different types
+
+df
+
+type(gp)
+
+gp.head()
+
+gp.shape
+
+gp.describe()    # sumary ststistics
+
+gp.boxplot()            # to find outliers
+
+gp.hist()
+
+gp.info()
+
+gp.shape
+
+# data cleaning
+
+gp.isnull()
+
+gp.isnull().sum()  # it counts the no of missing values in each column
+
+# check how many ratings are more than 5_ outliers
+
+gp[gp.Rating>5]
+
+gp.drop([10472],inplace=True)
+
+gp[10470:10475]
+
+gp.boxplot()
+
+gp.hist()
+
+# remove columns that are 90% empty
+
+threshold=len(gp)*0.1
+
+threshold
+
+gp.dropna(thresh=threshold,axis=1,inplace=True)
+
+print(gp.isnull().sum())
+
+gp.columns
+
+gp.shape
+
+# data imputation and manipulation
+
+# fill the null values with appropriate values using aggregate func such as mean,median,mode
+
+c=c.fillna(c.mean())
+
+c.isnull().sum()
+
+c.Rating.isnull().sum()
+
+c.columns
+
+print(c["Type"].mode())
+print(c["Current Ver"].mode())
+print(c["Android Ver"].mode())
+
+# filling the issing categorical variable with mode values
+c["Type"].fillna(str(c["Type"].mode().values[0]),inplace=True)
+c["Current Ver"].fillna(str(c["Current Ver"].mode().values[0]),inplace=True)
+c["Android Ver"].fillna(str(c["Android Ver"].mode().values[0]),inplace=True)
+
+c.isnull().sum()
+
+c.head(2)
+
+c.columns
+
+# lets convert the price reviews and ratings into numerical values
+
+c["Price"]=c["Price"].apply(lambda x: str(x).replace("$","")if "$"in str(x)else str(x))
+c["Price"]=c["Price"].apply(lambda x: float(x))
+c["Reviews"]=pd.to_numeric(c["Reviews"],errors="coerce")
+
+
+c["Installs"]=c["Installs"].apply(lambda x: str(x).replace("+","")if "+"in str(x)else str(x))
+c["Installs"]=c["Installs"].apply(lambda x: str(x).replace(",","")if ","in str(x)else str(x))
+c["Installs"]=c["Installs"].apply(lambda x: float(x))
+
+
+c.head(10)
+
+c.describe()   # summanry stats
+
+#  DATA VISUALIZATION
+
+grp=c.groupby("Category")
+j=grp["Rating"].agg(np.mean)    # here taking the rating column from the data set and agggreagating it to the mean
+k=grp["Price"].agg(np.sum)      # here taking the price column from the data set and aggregating it to the sum
+l=grp["Reviews"].agg(np.mean)   # here taking tghe review col and aggregating it to the mean value
+print(j)
+print(k)
+print(l)
+
+plt.plot(j)
+
+plt.plot(k)
+
+plt.plot(l)
+
+plt.plot(j, "ro")
+
+plt.plot(j,"ro")
+plt.xticks(rotation=90)
+plt.show
+
+plt.plot(k,"ro")
+plt.xticks(rotation=90)
+plt.show
+
+plt.plot(l,"ro")
+plt.xticks(rotation=90)
+plt.show
+
+plt.figure(figsize=(10,5))
+plt.plot(j,"ro")
+plt.xticks(rotation=90)
+plt.show
+
+plt.figure(figsize=(16,5))
+plt.plot(j,"ro", color="g")
+plt.xticks(rotation=90)
+plt.title("category wise rating")
+plt.xlabel("categories")
+plt.ylabel("rating")
+plt.show
+
+plt.figure(figsize=(16,5))
+plt.plot(k,"r--", color="g")
+plt.xticks(rotation=90)
+plt.title("category wise rating")
+plt.xlabel("categories")
+plt.ylabel("rating")
+plt.show
+
+plt.figure(figsize=(16,5))
+plt.plot(l,"r*", color="b")
+plt.xticks(rotation=90)
+plt.title("category wise rating")
+plt.xlabel("categories")
+plt.ylabel("rating")
+plt.show
+
+plt.figure(figsize=(16,5))
+plt.plot(j,"r^", color="g")
+plt.xticks(rotation=90)
+plt.title("category wise rating")
+plt.xlabel("categories")
+plt.ylabel("rating")
+plt.show
+
+sbn.pairplot(c)
+
