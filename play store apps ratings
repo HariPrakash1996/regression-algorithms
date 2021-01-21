@@ -199,3 +199,12 @@ plt.show
 
 sbn.pairplot(c)
 
+# using the linear regression model
+
+from sklearn.linear_model import LinearRegression
+lr=LinearRegression()
+lr.fit(x_train,y_train)
+
+from sklearn.metrics import accuracy_score
+
+accuracy_score(gp["column_name"],hd["column_name"])
